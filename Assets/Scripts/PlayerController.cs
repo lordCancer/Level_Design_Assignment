@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     private Animator animator { get { return GetComponent<Animator>(); } }
     private bool grounded;
     private bool jumpRequest;
-
+    
     private void Start()
     {
         rb.freezeRotation = true;
@@ -25,17 +25,22 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         Move();
-        Debug.Log(grounded);
-        if(Input.GetKeyDown(KeyCode.Space) && grounded)
+
+        float jumpInput = Input.GetAxis("Jump");
+
+        if (/*Input.GetKeyDown(KeyCode.Space)*/  Input.GetButtonDown("Jump") && grounded)
         {
-            jumpRequest = true;
+            jumpRequest = true;                 
         }
+        
+        animator.SetBool("Grounded", grounded);
     }
 
     private void FixedUpdate()
     {
         //Checking if we are grounded
         grounded = IsGrounded();
+        Debug.Log(grounded);
 
         //Jump 
         if (jumpRequest)
@@ -69,7 +74,7 @@ public class PlayerController : MonoBehaviour
 
     private bool IsGrounded()
     {
-        grounded = Physics2D.OverlapCircle(legs.position, 0.05f, WalkableLayer);
+        grounded = Physics2D.OverlapCircle(transform.position, 0.5f, WalkableLayer);
         return grounded;
     }
 
